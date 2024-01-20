@@ -1,0 +1,13 @@
+
+
+Authentication vs Authorization
+
+Authentication :
+   - verifies the identity of the user or service/ verifies who they are
+   - protects the current user of other bad actors from accessing the current user's data
+   -ex. trying to log in 
+
+Authorization:
+   - determines access rights
+   - ex. if the person that is logged in has access to another user's log in info
+   -authorization determines what a person can do in the system once they login
