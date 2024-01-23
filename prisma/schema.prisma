@@ -11,8 +11,9 @@ datasource db {
 }
 
 model User {
-  email String @id @unique
-  dogs  Dog[]
+  email        String @id @unique
+  dogs         Dog[]
+  passwordHash String
 }
 
 model Dog {

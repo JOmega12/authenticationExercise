@@ -10,4 +10,4 @@ Authentication :
 Authorization:
    - determines access rights
    - ex. if the person that is logged in has access to another user's log in info
-   -authorization determines what a person can do in the system once they login
+   -authorization determines what a person can do in the system /once they login
