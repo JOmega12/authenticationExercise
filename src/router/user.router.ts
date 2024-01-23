@@ -7,7 +7,6 @@ import { prisma } from "../../prisma/db.setup";
 const userController = Router();
 
 // todo
-//* Needs Authorization
 userController.patch(
   "/users/:email",
   validateRequest({

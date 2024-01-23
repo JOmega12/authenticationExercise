@@ -6,15 +6,11 @@ import { z } from "zod";
 import { intParseableString as intParseableString } from "../zod/parseableString.schema";
 
 const dogController = Router();
-// TODO
-//* Needs Authentication
 dogController.get("/dogs", async (req, res) => {
   const dogs = await prisma.dog.findMany();
   return res.json(dogs);
 });
 
-// TODO
-//* Needs Authorization
 dogController.post(
   "/dogs",
   validateRequest({

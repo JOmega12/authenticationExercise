@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt';
 
-const password = 'password';
+const jonsHashPassword = '$2b$11$14yR7xG49nZKGIQP8eeL5eSqb/jxOXYq7M1zoRWbZ14vbp5PG/rrS';
+const peterHashPassword = '$2b$11$rVADpA8BUADSoVtnp0eZD.VsKpEkW7ojsu8e.Jstt8wPP6mQQc3g.';
 
 
+// const password = 'password';
 // console.log('starting')
 // bcrypt.hash(password, 11).then((result) => {
 //    console.log('done');
@@ -11,8 +13,8 @@ const password = 'password';
 
 
 bcrypt.compare(
-   password,
-   '$2b$11$CiTD0wObpDUH2MwwDdo0je3gsftzRGv.xE7X5g/2VG.saqB7.rB66'
+   "peter_password",
+   peterHashPassword
 ).then((result) => {
    console.log({result: result})
 })
