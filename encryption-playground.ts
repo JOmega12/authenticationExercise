@@ -3,11 +3,11 @@ import bcrypt from 'bcrypt';
 const password = 'password';
 
 
-console.log('starting')
-bcrypt.hash(password, 11).then((result) => {
-   console.log('done');
-   console.log({ result })
-})
+// console.log('starting')
+// bcrypt.hash(password, 11).then((result) => {
+//    console.log('done');
+//    console.log({ result })
+// })
 
 
 bcrypt.compare(
