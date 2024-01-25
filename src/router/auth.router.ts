@@ -29,7 +29,6 @@ authController.post(
       return res.status(404).json({message: 'User not found'})
    }
 
-
    const isPasswordCorrect = await bcrypt.compare(bodyPassword, user.passwordHash);
    
    if(!isPasswordCorrect){
@@ -38,7 +37,6 @@ authController.post(
 
    const userInformation = createUnsecuredUserInformation(user);
    const token = createTokenForUser(user);
-
 
 
    return res.status(200).json({token, userInformation})
