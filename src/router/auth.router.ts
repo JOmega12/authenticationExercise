@@ -4,6 +4,7 @@ import "express-async-errors";
 import { validateRequest } from "zod-express-middleware";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { createTokenForUser, createUnsecuredUserInformation } from "../auth.utils";
 
 const authController = Router();
 
@@ -34,7 +35,13 @@ authController.post(
    if(!isPasswordCorrect){
       return res.status(401).json({message: 'invalid credentials'})
    }
-   return res.status(200).json({message: "I guess you logged in?"})
+
+   const userInformation = createUnsecuredUserInformation(user);
+   const token = createTokenForUser(user);
+
+
+
+   return res.status(200).json({token, userInformation})
    //  const dogs = await prisma.dog.findMany({
    //    select: {
    //      name: true,
