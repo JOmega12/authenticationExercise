@@ -21,7 +21,7 @@ export const createUnsecuredUserInformation = (user: User) => {
 export const createTokenForUser = (user: User) => {
   return jwt.sign(
     createUnsecuredUserInformation(user),
-    "super-secret"
+    process.env.JWT_SECRET!
   );
 };
 
@@ -33,7 +33,7 @@ const jwtInfoSchema = z.object({
 export const getDataFromAuthToken = (token?: string) => {
   if (!token) return false;
   try {
-    return jwtInfoSchema.parse(jwt.verify(token, "super-secret"));
+    return jwtInfoSchema.parse(jwt.verify(token, process.env.JWT_SECRET!));
   } catch (e) {
     console.error(e);
     return null;
@@ -64,7 +64,7 @@ export const authMiddleware = async (
       return res.status(401).json({ message: "User not Found" });
     }
 
-    req.user = userFromJwt;
+    (req as any).user = userFromJwt;
     next();
     // JWT Handling Stuff 👆👆
 };

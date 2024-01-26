@@ -13,7 +13,21 @@ declare global {
       user?: User;
     }
   }
+
+  namespace NodeJS {
+    export interface ProcessEnv {
+      HOST: string;
+      DATABASE_URL: string;
+      JWT_SECRET: string;
+    }
+  }
 }
+
+["DATABASE_URL", "JWT_SECRET"].forEach((key) => {
+  if(process.env[key] === undefined) {
+    throw new Error(`Missing environment varibale ${key}`);
+  }
+})
 
 app.use(express.json());
 
