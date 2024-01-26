@@ -1,16 +1,44 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { prisma } from "../../prisma/db.setup";
 import "express-async-errors";
 import { validateRequest } from "zod-express-middleware";
 import { z } from "zod";
 import { intParseableString as intParseableString } from "../zod/parseableString.schema";
-import { getDataFromAuthToken } from "../auth.utils";
+import { authMiddleware, getDataFromAuthToken } from "../auth.utils";
 
 const dogController = Router();
 dogController.get("/dogs", async (req, res) => {
   const dogs = await prisma.dog.findMany();
   return res.json(dogs);
 });
+
+// const authMiddleware = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//     // JWT Handling Stuff 👇👇
+//     const [, token] = req.headers.authorization?.split?.(" ") || [];
+//     const myJwtData = getDataFromAuthToken(token);
+//     if (!myJwtData) {
+//       return res.status(401).json({ message: "Invalid token" });
+//     }
+
+//     // this checks user is in database
+//     const userFromJwt = await prisma.user.findFirst({
+//       where: {
+//         email: myJwtData.email,
+//       },
+//     });
+
+//     if (!userFromJwt) {
+//       return res.status(401).json({ message: "User not Found" });
+//     }
+
+//     req.user = userFromJwt;
+//     next();
+//     // JWT Handling Stuff 👆👆
+// };
 
 dogController.post(
   "/dogs",
@@ -21,26 +49,8 @@ dogController.post(
       // !userEmail is not necessary since the user email info is coming from the Jwt data
     }),
   }),
+  authMiddleware,
   async (req, res) => {
-    // JWT Handling Stuff 👇👇
-    const [, token] = req.headers.authorization?.split?.(" ") || [];
-    const myJwtData = getDataFromAuthToken(token);
-    if(!myJwtData) {
-      return res.status(401).json({message: 'Invalid token'})
-    }
-
-    // this checks user is in database
-    const userFromJwt = await prisma.user.findFirst({
-      where: {
-        email: myJwtData.email,
-      },
-    });
-
-    if(!userFromJwt) {
-      return res.status(401).json({message: "User not Found"})
-    }
-    // JWT Handling Stuff 👆👆
-
     const { name } = req.body;
     // const user = await prisma.user
     //   .findFirstOrThrow({
@@ -58,7 +68,7 @@ dogController.post(
       .create({
         data: {
           name,
-          userEmail: userFromJwt.email,
+          userEmail: req.user!.email,
         },
       })
       .catch(() => null);

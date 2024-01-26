@@ -3,6 +3,8 @@ import { User } from "@prisma/client";
 import { userInfo } from "os";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+import { NextFunction, Request, Response } from "express";
+import { prisma } from "../prisma/db.setup";
 
 const saltRounds = 11;
 
@@ -36,4 +38,33 @@ export const getDataFromAuthToken = (token?: string) => {
     console.error(e);
     return null;
   }
+};
+
+
+export const authMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+    // JWT Handling Stuff 👇👇
+    const [, token] = req.headers.authorization?.split?.(" ") || [];
+    const myJwtData = getDataFromAuthToken(token);
+    if (!myJwtData) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    // this checks user is in database
+    const userFromJwt = await prisma.user.findFirst({
+      where: {
+        email: myJwtData.email,
+      },
+    });
+
+    if (!userFromJwt) {
+      return res.status(401).json({ message: "User not Found" });
+    }
+
+    req.user = userFromJwt;
+    next();
+    // JWT Handling Stuff 👆👆
 };
